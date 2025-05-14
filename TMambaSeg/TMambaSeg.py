@@ -309,6 +309,27 @@ class TMambaSegWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
 
                 qt.QApplication.processEvents()  # 保持UI响应
 
+            # # 获取最终结果
+            # return_code = process.poll()
+            # if return_code == 0:
+            #     log_widget.append("脚本执行成功")
+            # else:
+            #     log_widget.append(f"脚本执行失败，返回码: {return_code}")
+            #
+            # # 处理输出和错误
+            # if result.returncode == 0:
+            #     log_widget.append("脚本执行成功")
+            #     if result.stdout:
+            #         log_widget.append("脚本输出:")
+            #         log_widget.append(result.stdout)
+            # else:
+            #     log_widget.append(f"脚本执行失败，返回码: {result.returncode}")
+            #     if result.stderr:
+            #         log_widget.append("错误信息:")
+            #         log_widget.append(result.stderr)
+            #     return  # 提前退出，避免后续错误
+
+            # 5. 加载结果文件（注意转换回 Windows 路径）
             output_files = subprocess.run(
                 ["wsl", "find", wsl_output_dir, "-name", "*_seg.nii.gz"],
                 capture_output=True,
@@ -376,15 +397,6 @@ class TMambaSegWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
                     log_widget.append("分割结果加载失败")
             else:
                 log_widget.append("未找到输出文件")
-
-        except subprocess.CalledProcessError as e:
-            log_widget.append(f"路径转换或命令执行失败: {str(e)}")
-            if e.stderr:
-                log_widget.append(f"错误信息: {e.stderr}")
-        except subprocess.TimeoutExpired:
-            log_widget.append("脚本执行超时")
-        except Exception as e:
-            log_widget.append(f"未知错误: {str(e)}")
 
         except subprocess.CalledProcessError as e:
             log_widget.append(f"路径转换或命令执行失败: {str(e)}")
