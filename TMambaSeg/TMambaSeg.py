@@ -153,6 +153,31 @@ class TMambaSegWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
         # 界面布局
         # self.layout.addWidget(qt.QLabel("T-Mamba Segmentation Plugin"))
 
+        # 输入文件选择
+        self.inputFileButton = qt.QPushButton("选择输入文件")
+        self.inputFileButton.clicked.connect(self.onInputFileButtonClicked)
+        self.layout.addWidget(self.inputFileButton)
+
+        # 输出目录选择
+        self.outputDirButton = qt.QPushButton("选择输出目录")
+        self.outputDirButton.clicked.connect(self.onOutputDirButtonClicked)
+        self.layout.addWidget(self.outputDirButton)
+
+        # 运行按钮
+        self.applyButton = qt.QPushButton("运行推理")
+        self.applyButton.clicked.connect(self.onApplyButton)
+        self.layout.addWidget(self.applyButton)
+
+        self.progressBar = qt.QProgressBar()
+        self.progressBar.setRange(0, 100)
+        self.layout.addWidget(self.progressBar)  # 插入到日志框上方
+
+        # 日志显示
+        self.logText = qt.QTextEdit()
+        self.logText.setReadOnly(True)
+        self.layout.addWidget(self.logText)
+
+        self.layout.addStretch(1)
 
     def runInference(self, input_file: str, output_dir: str, log_widget: qt.QTextEdit) -> None:
         try:
