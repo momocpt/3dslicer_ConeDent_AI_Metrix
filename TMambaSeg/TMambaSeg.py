@@ -386,6 +386,15 @@ class TMambaSegWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
         except Exception as e:
             log_widget.append(f"未知错误: {str(e)}")
 
+        except subprocess.CalledProcessError as e:
+            log_widget.append(f"路径转换或命令执行失败: {str(e)}")
+            if e.stderr:
+                log_widget.append(f"错误信息: {e.stderr}")
+        except subprocess.TimeoutExpired:
+            log_widget.append("脚本执行超时")
+        except Exception as e:
+            log_widget.append(f"未知错误: {str(e)}")
+
     def onApplyButton(self):
         """处理应用按钮点击"""
         if not self._parameterNode:
